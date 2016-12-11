@@ -37,15 +37,14 @@ class DashboardController extends AdminController
             }
         }
 
-        $this->helperGetSummary();
-
         return view('admin/dashboard', [
             'menu_config_name' => $this->menu_config_name,
             'pages' => $this->helperPageProvider(),
         ]);
     }
 
-    public function showStat($page_id) {
+    public function showStat($page_id)
+    {
         return view('admin/page_stat', [
             'pages' => $this->helperPageProvider(),
             'page_id' => $page_id,
@@ -53,6 +52,19 @@ class DashboardController extends AdminController
             'platforms' => $this->scanAllForMatch("stat:page:".$page_id.":os:*:ip"),
             'geodata' => $this->scanAllForMatch("stat:page:".$page_id.":geo:*:ip"),
             'refs' => $this->scanAllForMatch("stat:page:".$page_id.":ref:*:ip"),
+            'menu_config_name' => $this->menu_config_name,
+        ]);
+    }
+
+    public function summary()
+    {
+        return view('admin/total_page_stat', [
+            'pages' => $this->helperPageProvider(),
+            'page_id' => 'summary',
+            'browsers' => $this->scanAllForMatch("stat:page:summary:browser:*:ip"),
+            'platforms' => $this->scanAllForMatch("stat:page:summary:os:*:ip"),
+            'geodata' => $this->scanAllForMatch("stat:page:summary:geo:*:ip"),
+            'refs' => $this->scanAllForMatch("stat:page:summary:ref:*:ip"),
             'menu_config_name' => $this->menu_config_name,
         ]);
     }

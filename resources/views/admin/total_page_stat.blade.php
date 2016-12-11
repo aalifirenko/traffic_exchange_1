@@ -10,7 +10,7 @@ use App\Helpers\StatisticHelper;
 
 @section('content')
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-        <h1 class="page-header">Статистика для страницы: {{ $page_id }}</h1>
+        <h1 class="page-header">Общая статистика по всем страницам</h1>
         Browsers:
         <table class="table table-hover">
             <thead>
@@ -22,34 +22,34 @@ use App\Helpers\StatisticHelper;
             <th>уники по кукам за 24ч/7д/31д</th>
             </thead>
             @foreach ($browsers as $browser)
-            <tr>
-                <?php
-                    $browserArraydata = explode(":", $browser);
-                    $datetimeCollectionUniqIp = Redis::smembers("stat:page:".$page_id.":browser:".$browserArraydata[4].":datetime_ip");
-                    $datetimeCollectionUniqCookies = Redis::smembers("stat:page:".$page_id.":browser:".$browserArraydata[4].":datetime_session");
-                ?>
-                <td>
-                    {{ $browserArraydata[4] }}</td>
-                <td>
-                    {{ Redis::scard("stat:page:".$page_id.":browser:".$browserArraydata[4].":hit") }}
-                </td>
-                <td>
-                    {{ Redis::scard("stat:page:".$page_id.":browser:".$browserArraydata[4].":ip") }}
-                </td>
-                <td>
-                    {{ Redis::scard("stat:page:".$page_id.":browser:".$browserArraydata[4].":session") }}
-                </td>
-                <td>
-                    {{ StatisticHelper::getDatetimeCount($datetimeCollectionUniqIp, '24h') }} /
-                    {{ StatisticHelper::getDatetimeCount($datetimeCollectionUniqIp, '7d') }} /
-                    {{ StatisticHelper::getDatetimeCount($datetimeCollectionUniqIp, '31d') }}
-                </td>
-                <td>
-                    {{ StatisticHelper::getDatetimeCount($datetimeCollectionUniqCookies, '24h') }} /
-                    {{ StatisticHelper::getDatetimeCount($datetimeCollectionUniqCookies, '7d') }} /
-                    {{ StatisticHelper::getDatetimeCount($datetimeCollectionUniqCookies, '31d') }}
-                </td>
-            </tr>
+                <tr>
+                    <?php
+                        $browserArraydata = explode(":", $browser);
+                        $datetimeCollectionUniqIp = Redis::smembers("stat:page:".$page_id.":browser:".$browserArraydata[4].":datetime_ip");
+                        $datetimeCollectionUniqCookies = Redis::smembers("stat:page:".$page_id.":browser:".$browserArraydata[4].":datetime_session");
+                    ?>
+                    <td>
+                        {{ $browserArraydata[4] }}</td>
+                    <td>
+                        {{ Redis::scard("stat:page:".$page_id.":browser:".$browserArraydata[4].":hit") }}
+                    </td>
+                    <td>
+                        {{ Redis::scard("stat:page:".$page_id.":browser:".$browserArraydata[4].":ip") }}
+                    </td>
+                    <td>
+                        {{ Redis::scard("stat:page:".$page_id.":browser:".$browserArraydata[4].":session") }}
+                    </td>
+                    <td>
+                        {{ StatisticHelper::getDatetimeCount($datetimeCollectionUniqIp, '24h') }} /
+                        {{ StatisticHelper::getDatetimeCount($datetimeCollectionUniqIp, '7d') }} /
+                        {{ StatisticHelper::getDatetimeCount($datetimeCollectionUniqIp, '31d') }}
+                    </td>
+                    <td>
+                        {{ StatisticHelper::getDatetimeCount($datetimeCollectionUniqCookies, '24h') }} /
+                        {{ StatisticHelper::getDatetimeCount($datetimeCollectionUniqCookies, '7d') }} /
+                        {{ StatisticHelper::getDatetimeCount($datetimeCollectionUniqCookies, '31d') }}
+                    </td>
+                </tr>
             @endforeach
         </table>
 

@@ -18,11 +18,14 @@ class UpdateStatistic
     const GEO = ":geo:";
     const REF = ":ref:";
     const IP = ":ip";
+    const DATETIME_IP = ":datetime_ip";
+    const DATETIME_SESSION = ":datetime_session";
     const HIT = ":hit";
     const SESSION = ":session";
     private $uhash; /* A visit unique hash value */
     private $agent;
     private $user_ip;
+    private $current_datetime;
 
     /**
      * Handle an incoming request.
@@ -36,6 +39,8 @@ class UpdateStatistic
         $page_name = $request->route()->getName();
         $this->agent = get_browser();
         $this->user_ip = Request::ip();
+        $this->current_datetime = date('Y-m-d H:i:s');
+
         $this->insertBrowser($page_name);
         $this->insertOs($page_name);
         $this->insertGeo($page_name);
@@ -67,6 +72,8 @@ class UpdateStatistic
     {
         $browserSet = self::BASE.$page_id.self::BROWSER.$this->agent->browser;
         Redis::sadd($browserSet.self::IP, $this->user_ip);
+        Redis::sadd($browserSet.self::DATETIME_IP, $this->current_datetime . '/' . $this->user_ip);
+        Redis::sadd($browserSet.self::DATETIME_SESSION, $this->current_datetime . '/' . $this->helperGetCurrentCookieId());
         Redis::sadd($browserSet.self::HIT, $this->getAssuredUniqHash($browserSet.self::HIT));
         Redis::sadd($browserSet.self::SESSION, $this->helperGetCurrentCookieId());
     }
@@ -75,6 +82,8 @@ class UpdateStatistic
     {
         $OsSet = self::BASE.$page_id.self::OS.$this->agent->platform;
         Redis::sadd($OsSet.self::IP, $this->user_ip);
+        Redis::sadd($OsSet.self::DATETIME_IP, $this->current_datetime . '/' . $this->user_ip);
+        Redis::sadd($OsSet.self::DATETIME_SESSION, $this->current_datetime . '/' . $this->helperGetCurrentCookieId());
         Redis::sadd($OsSet.self::HIT, $this->getAssuredUniqHash($OsSet.self::HIT));
         Redis::sadd($OsSet.self::SESSION, $this->helperGetCurrentCookieId());
     }
@@ -89,6 +98,8 @@ class UpdateStatistic
         }
         $RefSet = self::BASE.$page_id.self::REF.$parsedUrl['host'];
         Redis::sadd($RefSet.self::IP, $this->user_ip);
+        Redis::sadd($RefSet.self::DATETIME_IP, $this->current_datetime . '/' . $this->user_ip);
+        Redis::sadd($RefSet.self::DATETIME_SESSION, $this->current_datetime . '/' . $this->helperGetCurrentCookieId());
         Redis::sadd($RefSet.self::HIT, $this->getAssuredUniqHash($RefSet.self::HIT));
         Redis::sadd($RefSet.self::SESSION, $this->helperGetCurrentCookieId());
     }
@@ -97,6 +108,8 @@ class UpdateStatistic
     {
         $GeoSet = self::BASE.$page_id.self::GEO.$this->helperGetGeoData();
         Redis::sadd($GeoSet.self::IP, $this->user_ip);
+        Redis::sadd($GeoSet.self::DATETIME_IP, $this->current_datetime . '/' . $this->user_ip);
+        Redis::sadd($GeoSet.self::DATETIME_SESSION, $this->current_datetime . '/' . $this->helperGetCurrentCookieId());
         Redis::sadd($GeoSet.self::HIT, $this->getAssuredUniqHash($GeoSet.self::HIT));
         Redis::sadd($GeoSet.self::SESSION, $this->helperGetCurrentCookieId());
     }
