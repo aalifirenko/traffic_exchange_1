@@ -59,6 +59,10 @@ return [
 			'title' => 'Summary',
 			'url' => '/summary',
 		],
+		'details' => [
+			'title' => 'Details Statistic',
+			'url' => '/details',
+		],
 		'logout' => [
 			'title' => 'Logout',
 			'url' => '/logout',

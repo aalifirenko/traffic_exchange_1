@@ -1,6 +1,11 @@
 <?php
 namespace App\Helpers;
 
+use Illuminate\Support\Facades\Redis;
+use Request;
+use Config;
+use Closure;
+
 class StatisticHelper
 {
 	public static function getDatetimeCount($collection, $pattern)
@@ -37,5 +42,48 @@ class StatisticHelper
 		}
 
 		return $count;
+	}
+
+	public static function getUniqBrowsers($browsers)
+	{
+		$data = [];
+
+		foreach ($browsers as $browser) {
+			$browserArrayData = explode(":", $browser);
+			array_push($data, $browserArrayData[4]);
+		}
+
+		return $data;
+	}
+
+	public static function getUniqOS($os_list)
+	{
+		$data = [];
+
+		foreach ($os_list as $os) {
+			$osArrayData = explode(":", $os);
+			array_push($data, $osArrayData[4]);
+		}
+
+		return $data;
+	}
+
+	public static function getUniqRef($ref_list)
+	{
+		$data = [];
+
+		foreach ($ref_list as $ref) {
+			$refArrayData = explode(":", $ref);
+			array_push($data, $refArrayData[4]);
+		}
+
+		return $data;
+	}
+
+	public static function getFilteredData($browser, $os, $ref, $page)
+	{
+		$data = [];
+
+		return $data;
 	}
 }
